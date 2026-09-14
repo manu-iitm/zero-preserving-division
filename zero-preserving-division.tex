@@ -1,4 +1,4 @@
-l\documentclass[11pt,a4paper]{article}
+\documentclass[11pt,a4paper]{article}
 
 \usepackage{amsmath,amssymb,amsthm}
 \usepackage{mathtools}
@@ -6,16 +6,17 @@ l\documentclass[11pt,a4paper]{article}
 \usepackage{hyperref}
 \usepackage{booktabs}
 \usepackage{enumitem}
+\usepackage{amsthm}
 
 \geometry{margin=1in}
 
 \title{\textbf{A Zero-Preserving, Singularity-Sensitive Division Calculus with an Idempotent Element}}
 
-\author{Manu Iyengar}
+\author{Manu R}
 \date{\today}
 
 \newtheorem{definition}{Definition}[section]
-\newtheorem{rule}{Rule}[section]
+\newtheorem{rulethm}{Rule}[section]
 \newtheorem{proposition}{Proposition}[section]
 \newtheorem{remark}{Remark}[section]
 \newtheorem{example}{Example}[section]
@@ -229,7 +230,7 @@ to zero.
 
 The fundamental rules are:
 
-\begin{rule}[Division by zero]
+\begin{rulethm}[Division by zero]
 For every algebraic numerator $a$,
 \[
 \frac{a}{0}\rightsquigarrow aI.
@@ -245,7 +246,7 @@ and
 \frac{0}{0}\rightsquigarrow0I=0.
 \]
 
-\begin{rule}[Division by $I$]
+\begin{rulethm}[Division by $I$]
 For every algebraic numerator $a$,
 \[
 \frac{a}{I}\rightsquigarrow a0.
