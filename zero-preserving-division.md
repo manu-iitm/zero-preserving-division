@@ -1,1413 +1,873 @@
-A Zero-Preserving, Singularity-Sensitive Division Calculus with an Idempotent Element
+```latex
+\documentclass[11pt,a4paper]{article}
 
-Research preprint — not peer reviewed
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{microtype}
 
-Abstract
+\title{A Zero-Preserving, Singularity-Sensitive Division Calculus with an Idempotent Element}
 
-Division by zero is ordinarily excluded from arithmetic because zero has no multiplicative inverse. Several algebraic frameworks have nevertheless studied ways of extending or totalizing division, including wheels, meadows, non-involutive meadows, and related structures.
+\author{Manu Iyengar}
 
-This paper proposes a different framework based on a distinguished idempotent element I, interpreted as the singular element associated with 1/0. The proposed algebra satisfies
+\date{\today}
 
-[
+\newtheorem{definition}{Definition}[section]
+\newtheorem{proposition}[definition]{Proposition}
+\newtheorem{theorem}[definition]{Theorem}
+\newtheorem{remark}[definition]{Remark}
+\newtheorem{example}[definition]{Example}
+
+\newcommand{\I}{I}
+\newcommand{\Div}{\operatorname{Div}}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+
+This paper proposes a division calculus designed to preserve ordinary
+multiplication by zero while assigning a meaningful value to division by
+zero. A distinguished element \(I\) is introduced with \(I^2=I\), ordinary
+multiplication by zero remains \(0x=x0=0\), and division by zero is defined
+by \(a/0=aI\), giving \(0/0=0\).
+
+The central feature is that division is syntax-sensitive: denominator
+factors are retained long enough for zero factors to be detected before
+ordinary algebraic simplification collapses them. Consequently, for
+\(c\neq0\),
+
+\[
+\frac{x}{0c}=\frac{xI}{c},
+\]
+
+rather than \(x/(0c)=x/0\).
+
+The underlying algebra can be represented as
+\(\mathbb{R}[I]/(I^2-I)\), which is isomorphic to
+\(\mathbb{R}\times\mathbb{R}\). The resulting framework is therefore not
+proposed as a conventional field-like algebra with a total binary division
+operation. Instead, it is a structured division calculus over an ordinary
+algebraic carrier.
+
+The paper formalizes this distinction, gives a proposed syntax and
+evaluation rule, identifies valid and invalid identities, and places the
+proposal in relation to wheels, meadows, and related approaches to division
+by zero.
+
+\end{abstract}
+
+
+\section{Introduction}
+
+Division by zero is undefined in ordinary real arithmetic because the
+equation \(bx=a\) has no unique solution when \(b=0\).
+
+Numerous algebraic frameworks have nevertheless investigated ways of
+extending arithmetic so that division becomes total or singular expressions
+receive designated values. Examples include wheels
+\cite{Carlstrom2004}, meadows
+\cite{BergstraHirshfeldTucker2009}, non-involutive meadows
+\cite{BergstraMiddelburg2015}, and common meadows
+\cite{BergstraPonse2015}.
+
+The present proposal starts from a different design requirement. We wish
+to retain the ordinary rule
+
+\[
+0x=x0=0
+\]
+
+while also assigning a value to division by zero.
+
+Let \(I\) denote the distinguished singular element associated with
+\(1/0\). The basic proposed rules are
+
+\[
 I^2=I,
 \qquad
 0I=I0=0,
 \qquad
-a/0:=aI,
-]
+\frac{a}{0}=aI.
+\]
 
-and therefore
+In particular,
 
-[
-0/0=0.
-]
+\[
+\frac{0}{0}=0.
+\]
 
-The central feature is that division is treated as a syntax-sensitive calculus rather than merely as an ordinary binary operation on algebraic values. In particular, zero factors occurring inside a structured denominator are retained until the division semantics are applied. Thus, for c\ne0,
+These rules alone are not the main difficulty. The crucial issue appears
+when zero occurs as a factor inside a denominator.
 
-[
-\frac{x}{0c}:=\frac{xI}{c},
-]
+If \(c\neq0\), the proposal is
 
-rather than simplifying 0c to 0 before interpreting the division.
+\[
+\frac{x}{0c}=\frac{xI}{c},
+\]
 
-This necessarily distinguishes algebraic equality in the underlying carrier from equivalence of structured division expressions. The paper develops the underlying algebra, formalizes the proposed division semantics, identifies valid and invalid algebraic transformations, and outlines questions concerning normal forms, termination, confluence, and comparison with existing division-by-zero frameworks.
+whereas ordinary multiplication gives \(0c=0\).
 
----
+Hence the expression \(0c\) cannot be collapsed to \(0\) before division
+semantics are applied.
 
-1. Introduction
+This observation forces a distinction between ordinary algebraic equality
+and equality of structured division expressions.
 
-Division is normally understood through multiplication by an inverse. For a nonzero element b,
 
-[
-\frac{a}{b}=ab^{-1},
-]
+\section{Motivation and Design Requirements}
 
-and consequently
+The proposed calculus is motivated by four requirements.
 
-[
+\subsection{Division by zero receives a value}
+
+For every algebraic element \(a\), the expression \(a/0\) should have a
+defined result:
+
+\[
+\frac{a}{0}=aI.
+\]
+
+\subsection{Multiplication by zero remains ordinary}
+
+The framework should not replace the usual absorbing behavior of zero:
+
+\[
+0x=x0=0.
+\]
+
+In particular,
+
+\[
+0I=I0=0.
+\]
+
+This requirement is deliberately different from treating \(I\) as an
+ordinary multiplicative inverse of zero.
+
+The notation \(I=1/0\) is a definition of the singular division value, not
+an assertion that
+
+\[
+I\cdot0=1.
+\]
+
+\subsection{Ordinary nonzero division remains ordinary}
+
+For \(b\neq0\),
+
+\[
+\frac{a}{b}
+\]
+
+has its usual meaning, and
+
+\[
 \left(\frac{a}{b}\right)b=a.
-]
+\]
 
-The difficulty at b=0 is immediate: there is no element x satisfying
+\subsection{Zero factors in denominators remain visible}
 
-[
-0x=1
-]
+If \(c\neq0\), the proposed semantics distinguishes
 
-in an ordinary field.
+\[
+\frac{x}{0}
+\]
 
-The standard response is therefore to leave division by zero undefined.
+from
 
-However, mathematical work has explored several alternatives in which division is made total or otherwise extended to singular inputs. These include wheels, meadows, non-involutive meadows, and common meadows.
+\[
+\frac{x}{0c}.
+\]
 
-The present work investigates another possibility.
+Specifically,
 
-The starting requirements are:
-
-1. ordinary multiplication by zero should remain unchanged;
-2. division by zero should have a defined result;
-3. 0/0 should consequently be defined;
-4. the singular value associated with 1/0 should be algebraically manageable;
-5. zero occurring as a factor inside a denominator should retain a detectable singular effect.
-
-These requirements lead to a distinguished element I satisfying
-
-[
-I^2=I
-]
-
-and
-
-[
-0I=0.
-]
-
-The central difficulty is not constructing such an algebraic element. The difficulty arises when division is treated as an operation on ordinary algebraic values.
-
----
-
-2. Design Requirements
-
-The proposed framework is guided by the following requirements.
-
-2.1 Preservation of ordinary multiplication by zero
-
-The ordinary rule
-
-[
-0x=0
-]
-
-should remain valid for every element of the algebra, including the singular element I.
-
-Thus
-
-[
-0I=0.
-]
-
-This requirement distinguishes the proposal from approaches in which a special error value becomes absorbing under multiplication.
-
-2.2 Defined division by zero
-
-Division by zero is assigned a value:
-
-[
-\frac{a}{0}:=aI.
-]
-
-The singular element is therefore not an undefined marker. It belongs to the algebraic carrier.
-
-2.3 Defined 0/0
-
-Setting a=0 gives
-
-[
-\frac{0}{0}=0I=0.
-]
-
-This is not intended to preserve the usual inverse law at zero. Instead, the inverse law is restricted to nonzero denominators.
-
-2.4 Idempotent singularity
-
-The singular element satisfies
-
-[
-I^2=I.
-]
-
-Consequently,
-
-[
-I^n=I
-]
-
-for every integer n\ge1.
-
-This allows multiple zero factors in a denominator to produce a single singular contribution.
-
-2.5 Factor sensitivity
-
-The framework is intended to distinguish a denominator containing an explicit zero factor from a denominator that has already been evaluated as an algebraic value.
-
-For example,
-
-[
-\frac{x}{0c}
-]
-
-is interpreted structurally before the product 0c is collapsed.
-
-For c\ne0,
-
-[
+\[
+\frac{x}{0}=xI,
+\qquad
 \frac{x}{0c}=\frac{xI}{c}.
-]
+\]
 
-This is a fundamental design requirement.
 
----
+\section{The Underlying Algebra}
 
-3. The Underlying Algebra
+\subsection{Definition of the singular element}
 
-Consider the quotient algebra
+Introduce a distinguished element \(I\) satisfying
 
-[
-A=\mathbb R[I]/(I^2-I).
-]
-
-The relation
-
-[
-I^2-I=0
-]
-
-means that
-
-[
+\[
 I^2=I.
-]
+\]
 
-Every element can be represented as
+The symbol \(I\) is associated with division by zero by the definition
 
-[
+\[
+\frac{1}{0}:=I.
+\]
+
+No inverse law is inferred from this definition.
+
+\subsection{The algebraic carrier}
+
+Consider
+
+\[
+A=\mathbb{R}[I]/(I^2-I).
+\]
+
+Every element of \(A\) has a representative of the form
+
+\[
 a+bI,
-\qquad a,b\in\mathbb R.
-]
+\qquad
+a,b\in\mathbb{R}.
+\]
 
-Addition is given by
+Addition is
 
-[
+\[
 (a+bI)+(c+dI)
+=
+(a+c)+(b+d)I,
+\]
 
-(a+c)+(b+d)I.
-]
+and multiplication is
 
-Multiplication is
-
-[
+\[
 (a+bI)(c+dI)
-
+=
 ac+(ad+bc+bd)I.
-]
+\]
 
-The final term follows from
+The ordinary absorbing property of zero follows immediately:
 
-[
-I^2=I.
-]
+\[
+0(a+bI)=0.
+\]
 
-3.1 Concrete representation
 
-There is an isomorphism
+\subsection{Representation as a product algebra}
 
-[
-\phi:A\to\mathbb R\times\mathbb R
-]
+There is an explicit isomorphism
+
+\[
+\phi:A\longrightarrow\mathbb{R}\times\mathbb{R}
+\]
 
 defined by
 
-[
+\[
 \phi(a+bI)=(a,a+b).
-]
+\]
 
-Under this mapping,
+Indeed,
 
-[
-I\mapsto(0,1).
-]
+\[
+\phi(I)=(0,1),
+\]
 
-Therefore,
+and
 
-[
-I^2\mapsto(0,1)^2=(0,1),
-]
+\[
+(0,1)^2=(0,1).
+\]
 
-confirming idempotence.
+The element \(I\) is therefore an idempotent and a zero divisor:
 
-The element I is also a zero divisor because
+\[
+I(1-I)=0.
+\]
 
-[
-I(1-I)=I-I^2=0.
-]
+This is an important structural fact. The proposal does not claim that
+the resulting carrier is a field or an integral domain.
 
-Thus I is not an ordinary invertible element.
 
-3.2 Consistency of multiplication by zero
+\section{Why Division Must Be Syntax-Sensitive}
 
-Since the underlying object is a ring,
+\subsection{The \(0=0c\) problem}
 
-[
-0x=0
-]
+In the underlying algebra,
 
-for every x\in A.
-
-In particular,
-
-[
-0I=0.
-]
-
-Therefore the algebra itself is consistent with the required zero-preserving behavior.
-
-The unusual aspect of the proposal lies not in the existence of this ring, but in how division expressions are interpreted.
-
----
-
-4. Why Division Must Be Syntax-Sensitive
-
-The central mathematical issue appears when ordinary algebraic equality is combined with the proposed division semantics.
-
-Suppose
-
-[
+\[
 0=0c
-]
+\]
 
-for some nonzero c.
+for every \(c\).
 
-If division were an ordinary extensional binary operation on algebraic values, then equality would imply
+If division were an ordinary extensional binary operation on algebraic
+values, substitutivity would imply
 
-[
-\frac{x}{0}
+\[
+\frac{x}{0}=\frac{x}{0c}.
+\]
 
-\frac{x}{0c}.
-]
+The proposed semantics instead gives, for \(c\neq0\),
 
-However, the proposed rules require
-
-[
+\[
 \frac{x}{0}=xI
-]
+\]
 
-while
+and
 
-[
-\frac{x}{0c}
+\[
+\frac{x}{0c}=\frac{xI}{c}.
+\]
 
-\frac{xI}{c}.
-]
+For example,
 
-These are generally different.
-
-For example, let c=2 and x=1:
-
-[
+\[
 \frac{1}{0}=I,
-]
+\qquad
+\frac{1}{0\cdot2}=\frac{I}{2}.
+\]
 
-whereas
+Thus unrestricted substitution of algebraically equal expressions inside
+a pending division expression is incompatible with the intended semantics.
 
-[
-\frac{1}{0\cdot2}
 
-\frac{I}{2}.
-]
+\subsection{Algebraic equality versus division-expression equivalence}
 
-Therefore the framework cannot simultaneously have:
+The framework therefore distinguishes two notions.
 
-1. ordinary equality 0=0c;
-2. unrestricted substitution of equals inside division;
-3. the factor-sensitive rule
-   [
-   \frac{x}{0c}=\frac{xI}{c}.
-   ]
+First, ordinary algebraic equality is used after an expression has been
+evaluated into the carrier \(A\).
 
-This is not a minor technical issue. It determines the mathematical nature of the proposed system.
+Second, structured division expressions retain denominator-factor
+information until the division rule has been applied.
 
----
+This is analogous to the distinction between a source expression and its
+evaluated value in a programming-language semantics: two expressions can
+have equal values in one context while still carrying different syntactic
+information needed by a context-sensitive operation.
 
-5. The Correct Mathematical Object
+\begin{remark}
 
-The proposal should therefore not be described simply as a field, ring, or algebra equipped with an ordinary total division operation.
+This distinction is not a claim that ordinary equality in \(A\) is
+non-transitive or otherwise defective.
 
-Instead, it consists of two layers:
+Rather, it says that algebraic equality of already-evaluated values cannot
+be used as an unrestricted preprocessing rule for structured division
+expressions.
 
-[
-\boxed{
-\text{algebraic carrier}
-+
-\text{syntax-sensitive division calculus}
-}
-]
+\end{remark}
 
-The algebraic carrier is
 
-[
-A=\mathbb R[I]/(I^2-I).
-]
+\section{Syntax of the Division Calculus}
 
-The division calculus operates on structured expressions that retain denominator factor information until singular semantics have been applied.
-
-Only after this interpretation does the resulting expression become an ordinary element of the algebraic carrier.
-
----
-
-6. Syntax of the Division Calculus
+\subsection{Ordinary algebraic expressions}
 
 Let ordinary algebraic expressions be generated by
 
-[
-E::=r\mid I\mid(E+E)\mid(E\cdot E),
-]
+\[
+E ::= r \mid I \mid (E+E) \mid (E\cdot E),
+\qquad r\in\mathbb{R}.
+\]
 
-where r\in\mathbb R.
+\subsection{Structured division expressions}
 
-Division is represented structurally as
+Instead of immediately representing a denominator as a single algebraic
+value, a division expression retains its denominator factors:
 
-[
-\operatorname{Div}(N;d_1,\ldots,d_n).
-]
+\[
+\Div(N;d_1,\ldots,d_n).
+\]
 
-The conventional notation
+Informally this is written as
 
-[
-\frac{N}{d_1d_2\cdots d_n}
-]
+\[
+\frac{N}{d_1\cdots d_n}.
+\]
 
-is used for readability.
+The structured representation records the factors before singular
+division semantics are applied.
 
-The distinction is important.
 
-For example,
-
-[
-\operatorname{Div}(x;0,2)
-]
-
-retains the fact that the denominator contains a zero factor.
-
-It is therefore not immediately replaced by
-
-[
-\operatorname{Div}(x;0).
-]
-
-The denominator is evaluated structurally first.
-
----
-
-7. Division Semantics
+\section{Division Semantics}
 
 Let
 
-[
-\operatorname{Div}(x;d_1,\ldots,d_n)
-]
+\[
+Z=\{i:d_i=0\}.
+\]
 
-be a structured division expression.
+For a numerator \(x\), define
 
-Define
-
-[
-Z={i:d_i=0}.
-]
-
-7.1 No zero factors
-
-If
-
-[
-Z=\varnothing,
-]
-
-ordinary division applies:
-
-[
-\operatorname{Div}(x;d_1,\ldots,d_n)
-
-x\prod_i d_i^{-1}.
-]
-
-7.2 At least one zero factor
-
-If
-
-[
-Z\ne\varnothing,
-]
-
-then
-
-[
-\operatorname{Div}(x;d_1,\ldots,d_n)
-
+\[
+\Div(x;d_1,\ldots,d_n)
+=
 xI^{|Z|}
-\prod_{i\notin Z}d_i^{-1}.
-]
+\prod_{i\notin Z}d_i^{-1},
+\]
 
-Because
+where the inverses in the final product are ordinary inverses of nonzero
+denominators.
 
-[
+Since
+
+\[
 I^k=I
-]
+\qquad
+\text{for every }k\geq1,
+\]
 
-for every k\ge1, this becomes
+this becomes
 
-[
-\operatorname{Div}(x;d_1,\ldots,d_n)
-
-xI
-\prod_{i\notin Z}d_i^{-1}.
-]
-
-Thus the general rule is
-
-[
-\boxed{
-\frac{x}{d_1\cdots d_n}
-
+\[
+\Div(x;d_1,\ldots,d_n)
+=
 \begin{cases}
-\displaystyle
-x\prod_i d_i^{-1},
-&d_i\ne0\ \forall i,\[1em]
-\displaystyle
-xI\prod_{d_i\ne0}d_i^{-1},
-&\text{otherwise}.
+x\displaystyle\prod_i d_i^{-1},
+& Z=\varnothing,\\[1.2ex]
+xI\displaystyle\prod_{d_i\neq0}d_i^{-1},
+& Z\neq\varnothing.
 \end{cases}
-}
-]
+\]
 
----
 
-8. Basic Examples
+\subsection{Division by a nonzero denominator}
 
-8.1 Division by zero
+For \(c\neq0\),
 
-[
-\frac{a}{0}=aI.
-]
+\[
+\Div(x;c)=xc^{-1}.
+\]
 
-8.2 Zero divided by zero
+Thus ordinary division is unchanged whenever no zero denominator factor
+is present.
 
-[
+
+\subsection{Division by zero}
+
+For the single-factor case,
+
+\[
+\Div(x;0)=xI.
+\]
+
+Consequently,
+
+\[
 \frac{0}{0}=0I=0.
-]
+\]
 
-8.3 One zero factor
 
-For c\ne0,
+\subsection{A zero factor followed by a nonzero factor}
 
-[
-\frac{x}{0c}
+For \(c\neq0\),
 
-\frac{xI}{c}.
-]
+\[
+\Div(x;0,c)=xIc^{-1}.
+\]
 
-8.4 Multiple zero factors
+In conventional notation,
 
-[
+\[
+\frac{x}{0c}=\frac{xI}{c}.
+\]
+
+
+\subsection{Multiple zero factors}
+
+For example,
+
+\[
+\Div(x;0,0,c)
+=
+xI^2c^{-1}
+=
+xIc^{-1}.
+\]
+
+More generally, the number of zero factors does not matter after the first
+one because \(I\) is idempotent:
+
+\[
+I^n=I,
+\qquad
+n\geq1.
+\]
+
+Thus
+
+\[
 \frac{x}{0\cdot0\cdot c}
-
-\frac{xI^2}{c}
-
+=
 \frac{xI}{c}.
-]
+\]
 
-8.5 Nonzero denominator
 
-For b\ne0,
+\section{Algebraic Properties}
 
-[
-\frac{a}{b}
-]
+\subsection{Zero divided by zero}
 
-retains ordinary division semantics.
+The defining rule gives
 
-Consequently,
-
-[
-\left(\frac{a}{b}\right)b=a.
-]
-
----
-
-9. Grouping Independence
-
-The semantics should not depend on irrelevant grouping of denominator factors.
-
-For example,
-
-[
-\frac{x}{(0c)d}
-
-\frac{xI}{cd}
-]
-
-and
-
-[
-\frac{x}{0(cd)}
-
-\frac{xI}{cd}.
-]
-
-Similarly,
-
-[
-\frac{x}{(0\cdot0)c}
-
-\frac{xI^2}{c}
-
-\frac{xI}{c}.
-]
-
-Thus the framework is intended to be sensitive to factor presence, but not to arbitrary parenthesization of the same factorized denominator.
-
----
-
-10. Restriction Against Premature Denominator Simplification
-
-The ordinary algebraic identity
-
-[
-0c=0
-]
-
-remains valid in the underlying algebra.
-
-However, the rewrite
-
-[
-0c\to0
-]
-
-is not permitted inside a pending structured division expression before singular evaluation.
-
-Thus
-
-[
-\frac{x}{0c}
-]
-
-must first be interpreted as
-
-[
-\frac{xI}{c}.
-]
-
-Only after this interpretation can the resulting algebraic expression be normalized.
-
-This distinction is analogous to preserving information in an expression before applying a semantic interpretation.
-
----
-
-11. The Meaning of 1/0
-
-The notation
-
-[
-I:=1/0
-]
-
-introduces the singular element associated with division by zero.
-
-It does not imply the ordinary inverse relation
-
-[
-I\cdot0=1.
-]
-
-Instead,
-
-[
-I\cdot0=0.
-]
-
-Thus
-
-[
-\frac{1}{0}\cdot0
-
-I0
-
-0. 
-
-]
-
-The ordinary identity
-
-[
-\frac{a}{b}b=a
-]
-
-is therefore explicitly restricted to
-
-[
-b\ne0.
-]
-
----
-
-12. Idempotence
-
-The defining relation
-
-[
-I^2=I
-]
-
-implies
-
-[
-I^3=I^2I=II=I.
-]
-
-By induction,
-
-[
-I^n=I
-]
-
-for every n\ge1.
-
-This gives the desired behavior for multiple zero factors:
-
-[
-\frac{x}{0^nc}
-
-\frac{xI^n}{c}
-
-\frac{xI}{c}.
-]
-
----
-
-13. Zero-Preserving Multiplication
-
-The underlying algebra retains
-
-[
-0x=x0=0.
-]
-
-In particular,
-
-[
-0I=I0=0.
-]
-
-This is one of the defining design requirements of the framework.
-
-Consequently,
-
-[
-\frac{a}{0}\cdot0
-
-aI0
-
-0. 
-
-]
-
-Therefore
-
-[
-\boxed{
-\left(\frac{a}{0}\right)0=0
-}
-]
-
-rather than a.
-
----
-
-14. Noninvertibility of I
-
-Because
-
-[
-I(1-I)=0
-]
-
-and 1-I\ne0, I is a zero divisor.
-
-Therefore I is not invertible in the underlying algebra.
-
-This is consistent with its interpretation as a singular contribution rather than an ordinary inverse.
-
----
-
-15. Cancellation Failure
-
-Ordinary cancellation cannot be applied through zero.
-
-For example,
-
-[
-\frac{a}{0}\cdot0
-
-aI0
-
-0. 
-
-]
-
-Therefore the expression cannot be simplified to a.
-
-Likewise, cancellation through I is not generally valid because I is a zero divisor.
-
-This means that familiar field manipulations must be accompanied by nonzero conditions.
-
----
-
-16. Valid Identities
-
-The following identities follow from the proposed rules.
-
-Idempotence
-
-[
-I^n=I,\qquad n\ge1.
-]
-
-Zero multiplication
-
-[
-0x=x0=0.
-]
-
-Division by zero
-
-[
-\frac{a}{0}=aI.
-]
-
-Zero divided by zero
-
-[
-\frac{0}{0}=0.
-]
-
-Nonzero denominator
-
-For b\ne0,
-
-[
-\left(\frac{a}{b}\right)b=a.
-]
-
-Addition
-
-[
-\frac{a}{0}+\frac{b}{0}
-
-(a+b)I
-
-\frac{a+b}{0}.
-]
-
-Multiplication
-
-[
-\left(\frac{a}{0}\right)
-\left(\frac{b}{0}\right)
-
-abI
-
-\frac{ab}{0}.
-]
-
-Factor-sensitive division
-
-For c\ne0,
-
-[
-\frac{x}{0c}
-
-\frac{xI}{c}.
-]
-
----
-
-17. Invalid or Restricted Identities
-
-The following are not universally valid.
-
-17.1 Cancellation through zero
-
-[
-\left(\frac{a}{0}\right)0=a
-]
-
-is false.
-
-Instead,
-
-[
-\left(\frac{a}{0}\right)0=0.
-]
-
-17.2 Unrestricted cancellation
-
-The identity
-
-[
-\left(\frac{a}{b}\right)b=a
-]
-
-requires
-
-[
-b\ne0.
-]
-
-17.3 Denominator collapse
-
-The transformation
-
-[
-\frac{x}{0c}\to\frac{x}{0}
-]
-
-is invalid.
-
-17.4 Cancellation through I
-
-Because I is a zero divisor, it cannot be cancelled as an ordinary nonzero scalar.
-
-17.5 Unrestricted fraction combination
-
-The ordinary identity
-
-[
-\frac{a}{b}+\frac{c}{d}
-
-\frac{ad+bc}{bd}
-]
-
-cannot simply be assumed in singular contexts.
-
-Such identities must be proven as valid rewrite rules under the proposed semantics.
-
----
-
-18. Algebraic Equality vs. Division-Expression Equivalence
-
-The framework requires two distinct notions.
-
-18.1 Algebraic equality
-
-Inside the underlying algebra,
-
-[
-0=0c.
-]
-
-This remains true.
-
-18.2 Division-expression equivalence
-
-Structured division expressions retain information about denominator factorization.
-
-Thus
-
-[
-\frac{x}{0c}
-]
-
-and
-
-[
-\frac{x}{0}
-]
-
-need not be equivalent.
-
-This distinction resolves the apparent contradiction between ordinary algebra and the factor-sensitive division rule.
-
-The framework therefore does not reject the algebraic identity
-
-[
-0c=0.
-]
-
-It restricts when that identity may be used during the evaluation of a structured division expression.
-
----
-
-19. Nested Division
-
-Nested division requires additional formal rules.
-
-For example,
-
-[
-\frac{a/0}{b}
-]
-
-contains a division expression in its numerator.
-
-If b\ne0, the inner expression evaluates to
-
-[
-aI
-]
-
-and the outer division gives
-
-[
-\frac{aI}{b}.
-]
-
-For b=0, a complete formal treatment requires the nested structured-division semantics to be applied rather than importing ordinary fraction identities.
-
-A rigorous calculus should therefore specify evaluation order or an equivalent structural semantics for nested division.
-
----
-
-20. Numerator Behavior
-
-Singular contributions arise from zero factors in the denominator.
-
-A zero numerator does not itself introduce I.
-
-For c\ne0,
-
-[
-\frac{0}{c}=0.
-]
-
-For the singular case,
-
-[
+\[
 \frac{0}{0}=0I=0.
-]
+\]
 
-Thus the singularity mechanism is intentionally denominator-sensitive.
+This is one of the principal design choices of the framework.
 
----
 
-21. Why 0/0=0 Is Not Contradictory
+\subsection{Multiplication after division}
 
-The equation
+For \(b\neq0\),
 
-[
-\frac{0}{0}=0
-]
+\[
+\left(\frac{a}{b}\right)b=a.
+\]
 
-does not imply
+For division by zero,
 
-[
-0\cdot0=0
-]
+\[
+\left(\frac{a}{0}\right)0
+=
+(aI)0
+=
+0.
+\]
 
-has somehow acquired an inverse interpretation.
+Therefore the identity
 
-The usual implication
+\[
+\left(\frac{a}{b}\right)b=a
+\]
 
-[
-\frac{a}{b}b=a
-]
+cannot be used without the condition \(b\neq0\).
 
-is explicitly restricted to nonzero b.
 
-Therefore
+\subsection{No cancellation through zero}
 
-[
-\frac{0}{0}=0
-]
+From
 
-and
+\[
+\left(\frac{a}{0}\right)0=0
+\]
 
-[
-\left(\frac{0}{0}\right)0=0
-]
+one cannot recover \(a\).
 
-are consistent.
+Thus cancellation through zero is invalid.
 
-The contradiction arises only if the ordinary inverse law is incorrectly applied to the singular case.
+Similarly, since \(I\) is a zero divisor,
 
----
+\[
+I(1-I)=0,
+\]
 
-22. No Ordinary Field Structure
+cancellation involving \(I\) is not generally valid.
 
-The proposed system is not a field.
 
-In particular:
+\subsection{Some valid singular identities}
 
-- zero is not invertible;
-- I is a zero divisor;
-- division by zero is not ordinary multiplication by an inverse;
-- cancellation is restricted;
-- division expressions retain syntactic information.
+The following identities follow from the proposed rules:
 
-The more appropriate description is:
-
-«a commutative algebraic carrier equipped with a syntax-sensitive division calculus.»
-
----
-
-23. Singular-Factor Normal Form
-
-A natural goal is a canonical representation of every structured denominator.
-
-Given
-
-[
-\frac{x}{d_1d_2\cdots d_n},
-]
-
-partition the factors into zero and nonzero factors.
-
-If no factor is zero, evaluate normally.
-
-If one or more factors are zero, replace all zero factors by a single I.
-
-Thus
-
-[
-\frac{x}{0a0b0}
-]
-
-with a,b\ne0 becomes
-
-[
-\frac{xI}{ab}.
-]
-
-The intended normal form therefore contains at most one singular factor.
-
----
-
-24. Rewrite-System Formulation
-
-The calculus can be separated into two stages.
-
-Stage 1: division interpretation
-
-A structured division expression is interpreted according to its denominator factors.
-
-For example,
-
-[
-\operatorname{Div}(x;0,c)
-\longrightarrow
-xI/c.
-]
-
-Stage 2: algebraic normalization
-
-The resulting expression is normalized using
-
-[
-I^2\to I
-]
+\[
+\frac{a}{0}+\frac{b}{0}
+=
+(a+b)I
+=
+\frac{a+b}{0},
+\]
 
 and
 
-[
-0x\to0,
-]
+\[
+\frac{a}{0}\frac{b}{0}
+=
+abI^2
+=
+abI
+=
+\frac{ab}{0}.
+\]
 
-together with the ordinary ring identities.
+These identities illustrate that the singular element behaves coherently
+under the ordinary operations of the carrier.
 
-This separation prevents ordinary algebraic simplification from prematurely destroying information required by the division semantics.
 
----
+\subsection{Restricted fraction identities}
 
-25. Termination and Confluence
+The usual identity
 
-A complete formal theory should determine whether the rewrite system is:
+\[
+\frac{a}{b}+\frac{c}{d}
+=
+\frac{ad+bc}{bd}
+\]
 
-- terminating;
-- confluent;
-- strongly normalizing;
-- capable of producing unique normal forms.
+cannot be assumed universally in the presence of structured singular
+denominators.
 
-For example, unrestricted rewriting of
+In particular, combining denominator factors can destroy information
+about which factors were zero.
 
-[
-0c\to0
-]
+Any such transformation therefore requires a proof that it preserves the
+structured division semantics.
 
-inside
 
-[
-\frac{x}{0c}
-]
+\section{Rewrite Discipline}
 
-would destroy the intended distinction.
+The proposed evaluation procedure is:
 
-Therefore the calculus requires explicit restrictions on rewrite contexts.
+\begin{enumerate}[label=\arabic*.]
 
-A formal proof of termination and confluence remains an open part of the project.
+\item Parse the division expression while retaining denominator factors.
 
----
+\item Do not collapse zero-containing denominator factors using ordinary
+algebraic multiplication.
 
-26. Relation to Existing Work
+\item Detect which denominator factors are zero.
 
-Division by zero has been studied extensively.
+\item Replace each zero factor by its singular \(I\)-contribution.
 
-26.1 Wheels
+\item Evaluate all remaining nonzero denominator factors using ordinary
+inverses.
 
-Wheels provide algebraic structures in which division is defined for all elements, including zero.
+\item Normalize the resulting algebraic expression in \(A\).
 
-They demonstrate that division-by-zero systems can be treated algebraically rather than merely as partial arithmetic.
+\end{enumerate}
 
-The present framework differs in its preservation of
+In particular, the rewrite
 
-[
-0I=0
-]
+\[
+0c\longrightarrow0
+\]
 
-and, more importantly, in treating denominator factor structure as semantically relevant.
+is valid in ordinary algebra but is not permitted as a preprocessing step
+inside a pending structured division expression.
 
-26.2 Meadows
 
-Meadows totalize inverse operations and commonly use
+\section{Valid and Invalid Transformations}
 
-[
-0^{-1}=0.
-]
+The following are valid:
 
-The present proposal instead introduces a distinct singular element satisfying
+\begin{align*}
+I^2 &= I,\\
+0I &= 0,\\
+\frac{a}{0} &= aI,\\
+\frac{0}{0} &= 0,\\
+\left(\frac{a}{b}\right)b &= a
+\qquad (b\neq0),\\
+\left(\frac{a}{0}\right)0 &= 0,\\
+\frac{x}{0c} &= \frac{xI}{c}
+\qquad (c\neq0),\\
+\frac{x}{0\cdot0\cdot c} &= \frac{xI}{c}
+\qquad (c\neq0).
+\end{align*}
 
-[
-1/0=I.
-]
+The following are invalid or require explicit restrictions:
 
-It also does not treat division as purely extensional on algebraic values.
+\begin{align*}
+\left(\frac{a}{b}\right)b &= a
+\qquad\text{without }b\neq0,\\
+\left(\frac{a}{0}\right)0 &= a,\\
+\frac{x}{0c} &= \frac{x}{0}
+\qquad(c\neq0),\\
+\text{cancellation through }0,\\
+\text{cancellation through }I.
+\end{align*}
 
-26.3 Non-involutive meadows
+The usual fraction-combination identity
 
-Non-involutive meadows investigate totalized inverses without requiring the standard involution property.
+\[
+\frac{a}{b}+\frac{c}{d}
+=
+\frac{ad+bc}{bd}
+\]
 
-They are particularly relevant to alternative treatments of division by zero.
+must also be treated as conditional rather than universally valid.
 
-A formal comparison with the proposed syntax-sensitive semantics is an important research direction.
 
-26.4 Common meadows
+\section{Relation to Existing Frameworks}
 
-Common meadows introduce an absorptive error value for exceptional computations.
+\subsection{Wheels}
 
-The present proposal takes a different route by introducing an algebraic singular element while preserving
+Wheels provide an algebraic approach to totalized division in which
+division by zero receives designated behavior and ordinary field laws are
+modified appropriately \cite{Carlstrom2004}.
 
-[
-0I=0.
-]
+The present proposal differs in its emphasis on retaining denominator
+factor structure during evaluation.
 
-26.5 Idempotent extensions
 
-Other work has considered algebraic extensions containing idempotent elements associated with formal division by zero.
+\subsection{Meadows}
 
-Therefore the existence of an idempotent element satisfying
+Meadows provide an equational specification of totalized division
+\cite{BergstraHirshfeldTucker2009}.
 
-[
-I^2=I
-]
+Their semantics is designed so that division can be treated algebraically
+within the chosen signature.
 
-should not itself be claimed as novel.
+The proposed calculus instead deliberately restricts unrestricted
+extensional treatment of division because denominator syntax carries
+semantic information.
 
-The intended contribution is the combination of the algebraic rules with the factor-sensitive division calculus.
 
----
+\subsection{Non-involutive and common meadows}
 
-27. Novelty and Scope
+Further variants study different choices for the behavior of inverse and
+division at zero \cite{BergstraMiddelburg2015,BergstraPonse2015}.
 
-The proposal does not claim that the following ideas are individually new:
+These provide important comparison points for determining exactly which
+properties of the present proposal are genuinely distinct.
 
-- division by zero;
-- totalized division;
-- an algebraic value associated with 1/0;
-- idempotent extensions;
-- zero divisors;
-- alternative inverse operations.
 
-The research question is whether the following combination forms a coherent and useful mathematical calculus:
+\subsection{Idempotent singular extensions}
 
-[
+Idempotent extensions involving a distinguished element associated with
+\(1/0\) have also appeared in other mathematical proposals.
+
+Therefore the mere introduction of an idempotent \(I\) is not claimed as
+novel.
+
+The potentially distinctive aspect investigated here is the combination
+of:
+
+\begin{enumerate}
+
+\item ordinary zero absorption \(0I=0\);
+
+\item the definition \(a/0=aI\);
+
+\item the resulting \(0/0=0\);
+
+\item and factor-sensitive, syntax-preserving division semantics.
+
+\end{enumerate}
+
+A complete novelty assessment requires a substantially broader literature
+review than the preliminary comparison presented here.
+
+
+\section{Novelty and Scope}
+
+The proposal should be viewed conservatively as a research program rather
+than as an established new algebraic theory.
+
+The most important open question is whether the syntax-sensitive semantics
+can be formalized in a way that is mathematically rigorous, useful, and
+sufficiently distinct from existing systems.
+
+In particular, a complete treatment should establish:
+
+\begin{itemize}
+
+\item a precise grammar for all expressions;
+
+\item a formally defined evaluation function;
+
+\item an appropriate equivalence relation;
+
+\item termination of the proposed normalization procedure;
+
+\item confluence or a characterization of unavoidable non-confluence;
+
+\item treatment of nested divisions;
+
+\item compatibility with substitution;
+
+\item and a rigorous comparison with existing totalized-division
+frameworks.
+
+\end{itemize}
+
+
+\section{Open Problems}
+
+Several questions remain open.
+
+\subsection{Nested division}
+
+Expressions such as
+
+\[
+\frac{x}{(y/0)}
+\]
+
+require a precise decision about whether the denominator is analyzed as a
+structured expression before or after the inner division is evaluated.
+
+
+\subsection{Normal forms}
+
+A canonical normal form for arbitrary expressions containing structured
+division has not yet been established.
+
+
+\subsection{Rewrite properties}
+
+It remains to be proved whether the proposed rewrite discipline is
+terminating and confluent.
+
+
+\subsection{Substitution}
+
+The precise conditions under which ordinary algebraic substitution is
+allowed inside a structured division expression require formal treatment.
+
+
+\subsection{General base rings}
+
+The construction has been described over \(\mathbb{R}\), but much of the
+underlying algebra can be formulated over a more general commutative ring.
+
+Determining the minimal assumptions required for the division calculus is
+an open direction.
+
+
+\section{Conclusion}
+
+This paper proposes a zero-preserving approach to division by zero based
+on an idempotent singular element \(I\).
+
+The carrier
+
+\[
+\mathbb{R}[I]/(I^2-I)
+\]
+
+provides a simple algebraic environment in which
+
+\[
 I^2=I,
-]
-
-[
+\qquad
 0I=0,
-]
+\]
 
-[
-a/0=aI,
-]
+while the division rule
 
-[
-0/0=0,
-]
+\[
+a/0=aI
+\]
 
-together with structured, factor-sensitive denominator semantics.
+gives
 
-The most distinctive conceptual feature is the separation between:
+\[
+0/0=0.
+\]
 
-[
-\text{algebraic equality}
-]
+The central proposal is not merely the introduction of \(I\), but the
+retention of denominator-factor structure during division.
 
-and
+This yields
 
-[
-\text{equivalence of structured division expressions}.
-]
+\[
+\frac{x}{0c}=\frac{xI}{c}
+\]
 
-A stronger novelty claim requires a comprehensive literature review and formal comparison with existing systems.
+for \(c\neq0\), even though \(0c=0\) in the underlying algebra.
 
----
+Consequently, the theory must distinguish ordinary algebraic equality from
+equivalence of structured division expressions.
 
-28. Open Problems
+Establishing a rigorous formal semantics for this distinction, and
+determining its relationship to existing approaches such as wheels and
+meadows, is the main subject for further work.
 
-Several questions remain to be resolved.
 
-28.1 Formal syntax
+\bibliographystyle{plain}
+\bibliography{references}
 
-Can the syntax of structured division be defined minimally and rigorously?
-
-28.2 Equality
-
-What is the mathematically appropriate equality relation for division expressions?
-
-28.3 Normal forms
-
-Does every expression have a unique canonical normal form?
-
-28.4 Confluence
-
-Can the rewrite system be proven confluent?
-
-28.5 Termination
-
-Can evaluation be shown to terminate for all finite expressions?
-
-28.6 Nested division
-
-What is the most natural semantics for arbitrary nested divisions?
-
-28.7 Generalization
-
-Can the construction be defined over arbitrary commutative rings rather than \mathbb R?
-
-28.8 Algebraic characterization
-
-Is there an algebraic or categorical structure that captures the syntax-sensitive semantics without explicitly referring to syntax?
-
-28.9 Comparison with existing frameworks
-
-Can the framework be formally embedded into, or shown to be distinct from, wheels, meadows, non-involutive meadows, or related structures?
-
----
-
-29. Summary of Core Rules
-
-The proposed calculus is centered on:
-
-[
-\boxed{I^2=I}
-]
-
-[
-\boxed{0I=I0=0}
-]
-
-[
-\boxed{\frac{a}{0}=aI}
-]
-
-[
-\boxed{\frac{0}{0}=0}
-]
-
-and, for c\ne0,
-
-[
-\boxed{\frac{x}{0c}=\frac{xI}{c}}.
-]
-
-More generally,
-
-[
-\boxed{
-\frac{x}{d_1\cdots d_n}
-
-xI^{|Z|}
-\prod_{d_i\ne0}d_i^{-1}
-}
-]
-
-where
-
-[
-Z={i:d_i=0}.
-]
-
-Because
-
-[
-I^k=I
-]
-
-for every k\ge1, all zero factors contribute a single singular factor.
-
----
-
-30. Conclusion
-
-This paper proposes a division calculus in which division by zero is represented by an idempotent singular element while ordinary multiplication by zero remains unchanged.
-
-The underlying algebra
-
-[
-\mathbb R[I]/(I^2-I)
-]
-
-is straightforward and consistent. The central challenge arises from the semantics of division expressions.
-
-If
-
-[
-0c=0
-]
-
-is allowed to simplify before division is interpreted, the proposed distinction between
-
-[
-\frac{x}{0c}
-]
-
-and
-
-[
-\frac{x}{0}
-]
-
-is lost.
-
-Consequently, the framework requires division to operate on structured expressions rather than solely on algebraic values.
-
-The resulting object is therefore best understood as a zero-preserving, singularity-sensitive division calculus over an algebraic carrier.
-
-Whether this calculus admits a clean canonical semantics, a terminating and confluent rewrite system, or a useful algebraic characterization remains to be established.
-
-The purpose of this work is to make those questions precise.
-
----
-
-References
-
-See ""references.md"" (references.md) for the bibliography.
+\end{document}
